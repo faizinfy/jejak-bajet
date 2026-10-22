@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useStore } from '../store.jsx'
 import { DEFAULT_SPLIT, GROUPS, GROUP_META } from '../lib/budget.js'
 import { emptyData, monthLabel, sampleData } from '../lib/model.js'
+import GroupIcon from '../components/GroupIcon.jsx'
 import { IconBack, IconShare } from '../components/Icons.jsx'
 import { isStandalone } from '../components/InstallHint.jsx'
 
@@ -22,7 +23,7 @@ function SplitEditor() {
         {GROUPS.map((g) => (
           <label key={g} className="field">
             <span>
-              <span className={`swatch swatch-${g}`} />
+              <GroupIcon group={g} size="sm" />
               {GROUP_META[g].label}
             </span>
             <div className="money-input">

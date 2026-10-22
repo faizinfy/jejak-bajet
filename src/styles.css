@@ -14,6 +14,8 @@
   --needs: #2a78d6;
   --wants: #eb6834;
   --savings: #1baf7a;
+  --summary: #6250d6;
+  --income: #c98500;
 
   --good: #006300;
   --good-bg: #e5f3e3;
@@ -45,6 +47,8 @@
     --needs: #3987e5;
     --wants: #d95926;
     --savings: #199e70;
+    --summary: #9085e9;
+    --income: #eda100;
 
     --good: #3cc23c;
     --good-bg: #16301a;
@@ -71,6 +75,8 @@
   --needs: #3987e5;
   --wants: #d95926;
   --savings: #199e70;
+  --summary: #9085e9;
+  --income: #eda100;
   --good: #3cc23c;
   --good-bg: #16301a;
   --bad: #f07a7a;
@@ -206,13 +212,39 @@ h2 {
   font-weight: 500;
 }
 
-.tab svg {
+.tab-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 30px;
+  border-radius: 15px;
+}
+
+/* Tinted pill behind the active tab's icon */
+.tab-icon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.tab-icon svg {
+  position: relative;
   width: 24px;
   height: 24px;
 }
 
 .tab.active {
   color: var(--ink);
+  font-weight: 650;
+}
+
+.tab.active .tab-icon::before {
+  opacity: 0.16;
 }
 
 .tab.active svg {
@@ -396,8 +428,15 @@ h2 {
 }
 
 .group-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 1.15rem;
   font-weight: 650;
+}
+
+.group-title .muted {
+  margin-left: -4px;
 }
 
 .planned-note {
@@ -413,31 +452,78 @@ h2 {
   margin: 10px 0 0;
 }
 
-/* ---------- Swatches & charts ---------- */
+/* ---------- Group colours, icons & charts ---------- */
 
-.swatch {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 3px;
-  margin-right: 6px;
-  vertical-align: 0;
-  flex: none;
+.c-summary {
+  color: var(--summary);
 }
 
-.swatch-needs,
+.c-income {
+  color: var(--income);
+}
+
+.c-needs {
+  color: var(--needs);
+}
+
+.c-wants {
+  color: var(--wants);
+}
+
+.c-savings {
+  color: var(--savings);
+}
+
 .fill-needs {
   background: var(--needs);
 }
 
-.swatch-wants,
 .fill-wants {
   background: var(--wants);
 }
 
-.swatch-savings,
 .fill-savings {
   background: var(--savings);
+}
+
+/* Icon on a chip tinted with its own colour (currentColor) */
+.gicon {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  vertical-align: middle;
+}
+
+.gicon::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: currentColor;
+  opacity: 0.14;
+}
+
+.gicon svg {
+  position: relative;
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.gicon-sm {
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  margin-right: 8px;
+}
+
+.gicon-sm svg {
+  width: 15px;
+  height: 15px;
 }
 
 .tbars {
@@ -450,9 +536,10 @@ h2 {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  align-items: center;
   gap: 8px;
   font-size: 0.9rem;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .tbar-name {

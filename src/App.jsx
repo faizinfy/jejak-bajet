@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useStore } from './store.jsx'
-import { IconBag, IconGear, IconHome, IconIncome, IconPiggy, IconSummary } from './components/Icons.jsx'
+import { IconGear, IconIncome, IconSummary } from './components/Icons.jsx'
+import { GROUP_ICONS } from './components/GroupIcon.jsx'
 import MonthBar from './components/MonthBar.jsx'
 import EmptyMonth from './components/EmptyMonth.jsx'
 import Summary from './views/Summary.jsx'
@@ -11,9 +12,9 @@ import Settings from './views/Settings.jsx'
 const TABS = [
   { id: 'summary', label: 'Summary', Icon: IconSummary },
   { id: 'income', label: 'Income', Icon: IconIncome },
-  { id: 'needs', label: 'Needs', Icon: IconHome },
-  { id: 'wants', label: 'Wants', Icon: IconBag },
-  { id: 'savings', label: 'Savings', Icon: IconPiggy },
+  { id: 'needs', label: 'Needs', Icon: GROUP_ICONS.needs },
+  { id: 'wants', label: 'Wants', Icon: GROUP_ICONS.wants },
+  { id: 'savings', label: 'Savings', Icon: GROUP_ICONS.savings },
 ]
 
 const TAB_KEY = 'jejak-bajet:tab'
@@ -77,7 +78,9 @@ export default function App() {
             aria-current={tab === id ? 'page' : undefined}
             onClick={() => setTab(id)}
           >
-            <Icon />
+            <span className={`tab-icon c-${id}`}>
+              <Icon />
+            </span>
             <span>{label}</span>
           </button>
         ))}

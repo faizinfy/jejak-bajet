@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../store.jsx'
 import { CATEGORY_SUGGESTIONS, GROUP_META } from '../lib/budget.js'
 import { money, percent } from '../lib/format.js'
+import GroupIcon from '../components/GroupIcon.jsx'
 import { IconPlus } from '../components/Icons.jsx'
 import MoneyInput from '../components/MoneyInput.jsx'
 import Sheet from '../components/Sheet.jsx'
@@ -101,7 +102,8 @@ export default function Group({ group }) {
     <div className="view">
       <section className="card">
         <h1 className="group-title">
-          {meta.emoji} {meta.longLabel} <span className="muted">({percent(s.targetShare, 0)})</span>
+          <GroupIcon group={group} />
+          {meta.longLabel} <span className="muted">({percent(s.targetShare, 0)})</span>
         </h1>
         <dl className="stats">
           <div>

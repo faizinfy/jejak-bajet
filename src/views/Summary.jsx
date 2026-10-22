@@ -2,6 +2,7 @@ import { useStore } from '../store.jsx'
 import { GROUPS, GROUP_META } from '../lib/budget.js'
 import { money } from '../lib/format.js'
 import { SplitBars, TargetBars } from '../components/Charts.jsx'
+import GroupIcon from '../components/GroupIcon.jsx'
 import InstallHint from '../components/InstallHint.jsx'
 import Status from '../components/Status.jsx'
 
@@ -74,7 +75,7 @@ export default function Summary({ goTo }) {
               return (
                 <tr key={g} className="clickable" onClick={() => goTo(g)}>
                   <td>
-                    <span className={`swatch swatch-${g}`} />
+                    <GroupIcon group={g} size="sm" />
                     {GROUP_META[g].label}
                   </td>
                   <td className="num">{money(s.recommended, '')}</td>

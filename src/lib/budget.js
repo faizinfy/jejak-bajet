@@ -4,9 +4,9 @@
 export const GROUPS = ['needs', 'wants', 'savings']
 
 export const GROUP_META = {
-  needs: { label: 'Needs', longLabel: 'Needs', emoji: '🏡' },
-  wants: { label: 'Wants', longLabel: 'Wants', emoji: '🛍️' },
-  savings: { label: 'Savings', longLabel: 'Investments / Savings', emoji: '🤑' },
+  needs: { label: 'Needs', longLabel: 'Needs' },
+  wants: { label: 'Wants', longLabel: 'Wants' },
+  savings: { label: 'Savings', longLabel: 'Investments / Savings' },
 }
 
 // T15:T17

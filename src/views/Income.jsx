@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useStore } from '../store.jsx'
 import { GROUPS, GROUP_META } from '../lib/budget.js'
 import { money, percent, shortDate } from '../lib/format.js'
+import GroupIcon from '../components/GroupIcon.jsx'
 import { IconPlus } from '../components/Icons.jsx'
 import MoneyInput from '../components/MoneyInput.jsx'
 import Sheet from '../components/Sheet.jsx'
@@ -63,7 +64,7 @@ export default function Income() {
           {GROUPS.map((g) => (
             <div key={g}>
               <dt>
-                <span className={`swatch swatch-${g}`} />
+                <GroupIcon group={g} size="sm" />
                 {GROUP_META[g].label} {percent(summary.groups[g].targetShare, 0)}
               </dt>
               <dd>{money(summary.groups[g].recommended, cur)}</dd>

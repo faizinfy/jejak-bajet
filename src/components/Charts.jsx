@@ -1,5 +1,6 @@
 import { GROUPS, GROUP_META } from '../lib/budget.js'
 import { money, percent } from '../lib/format.js'
+import GroupIcon from './GroupIcon.jsx'
 
 // "Recommended budget vs amount spent" — one bar per group on a shared scale.
 // The wash is the recommended budget, the solid bar is what was spent.
@@ -16,7 +17,7 @@ export function TargetBars({ summary, currency }) {
           <div key={g} className="tbar-row" title={label} aria-label={label}>
             <div className="tbar-head">
               <span className="tbar-name">
-                <span className={`swatch swatch-${g}`} />
+                <GroupIcon group={g} size="sm" />
                 {GROUP_META[g].label}
               </span>
               <span className="tbar-values">
@@ -88,7 +89,7 @@ export function SplitBars({ summary }) {
           {GROUPS.map((g) => (
             <tr key={g}>
               <td>
-                <span className={`swatch swatch-${g}`} />
+                <GroupIcon group={g} size="sm" />
                 {GROUP_META[g].label}
               </td>
               <td className="num">{percent(summary.groups[g].share)}</td>
