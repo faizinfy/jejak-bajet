@@ -15,40 +15,43 @@ function ItemSheet({ group, item, currency, onSave, onDelete, onClose }) {
 
   return (
     <Sheet title={item ? 'Edit category' : 'New category'} onClose={onClose}>
-      <form
-        className="form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (!name.trim()) return
-          onSave({ ...item, name: name.trim(), budget, spent })
-        }}
-      >
-        <label className="field">
-          <span>Category</span>
-          <input list={listId} value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Groceries" autoFocus={!item} />
-          <datalist id={listId}>
-            {CATEGORY_SUGGESTIONS[group].map((s) => (
-              <option key={s} value={s} />
-            ))}
-          </datalist>
-        </label>
-        <label className="field">
-          <span>Budget</span>
-          <MoneyInput value={budget} onChange={setBudget} currency={currency} />
-        </label>
-        <label className="field">
-          <span>Amount spent</span>
-          <MoneyInput value={spent} onChange={setSpent} currency={currency} />
-        </label>
-        <button type="submit" className="btn primary" disabled={!name.trim()}>
-          Save
-        </button>
-        {item && (
-          <button type="button" className="btn danger" onClick={onDelete}>
-            Delete category
+      {(close) => (
+        <form
+          className="form"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!name.trim()) return
+            onSave({ ...item, name: name.trim(), budget, spent })
+            close()
+          }}
+        >
+          <label className="field">
+            <span>Category</span>
+            <input list={listId} value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Groceries" autoFocus={!item} />
+            <datalist id={listId}>
+              {CATEGORY_SUGGESTIONS[group].map((s) => (
+                <option key={s} value={s} />
+              ))}
+            </datalist>
+          </label>
+          <label className="field">
+            <span>Budget</span>
+            <MoneyInput value={budget} onChange={setBudget} currency={currency} />
+          </label>
+          <label className="field">
+            <span>Amount spent</span>
+            <MoneyInput value={spent} onChange={setSpent} currency={currency} />
+          </label>
+          <button type="submit" className="btn primary" disabled={!name.trim()}>
+            Save
           </button>
-        )}
-      </form>
+          {item && (
+            <button type="button" className="btn danger" onClick={() => onDelete() && close()}>
+              Delete category
+            </button>
+          )}
+        </form>
+      )}
     </Sheet>
   )
 }
@@ -57,25 +60,29 @@ function SpendSheet({ item, currency, onSave, onClose }) {
   const [amount, setAmount] = useState(0)
   return (
     <Sheet title={`Add to ${item.name}`} onClose={onClose}>
-      <form
-        className="form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (amount) onSave(amount)
-        }}
-      >
-        <label className="field">
-          <span>Amount spent</span>
-          <MoneyInput value={0} onChange={setAmount} currency={currency} autoFocus />
-        </label>
-        <p className="muted small">
-          {money(item.spent, currency)} → <strong>{money(Number(item.spent) + amount, currency)}</strong>
-          {item.budget > 0 && <> of {money(item.budget, currency)} budget</>}
-        </p>
-        <button type="submit" className="btn primary" disabled={!amount}>
-          Add spending
-        </button>
-      </form>
+      {(close) => (
+        <form
+          className="form"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!amount) return
+            onSave(amount)
+            close()
+          }}
+        >
+          <label className="field">
+            <span>Amount spent</span>
+            <MoneyInput value={0} onChange={setAmount} currency={currency} autoFocus />
+          </label>
+          <p className="muted small">
+            {money(item.spent, currency)} → <strong>{money(Number(item.spent) + amount, currency)}</strong>
+            {item.budget > 0 && <> of {money(item.budget, currency)} budget</>}
+          </p>
+          <button type="submit" className="btn primary" disabled={!amount}>
+            Add spending
+          </button>
+        </form>
+      )}
     </Sheet>
   )
 }
@@ -172,15 +179,11 @@ export default function Group({ group }) {
           item={editing.id ? editing : null}
           currency={cur}
           onClose={() => setEditing(null)}
-          onSave={(row) => {
-            saveRow(group, row)
-            setEditing(null)
-          }}
+          onSave={(row) => saveRow(group, row)}
           onDelete={() => {
-            if (window.confirm(`Delete "${editing.name}"?`)) {
-              removeRow(group, editing.id)
-              setEditing(null)
-            }
+            if (!window.confirm(`Delete "${editing.name}"?`)) return false
+            removeRow(group, editing.id)
+            return true
           }}
         />
       )}
@@ -189,10 +192,7 @@ export default function Group({ group }) {
           item={spending}
           currency={cur}
           onClose={() => setSpending(null)}
-          onSave={(amount) => {
-            addSpent(group, spending.id, amount)
-            setSpending(null)
-          }}
+          onSave={(amount) => addSpent(group, spending.id, amount)}
         />
       )}
     </div>

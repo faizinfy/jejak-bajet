@@ -13,35 +13,38 @@ function IncomeSheet({ income, currency, onSave, onDelete, onClose }) {
 
   return (
     <Sheet title={income ? 'Edit income' : 'New income'} onClose={onClose}>
-      <form
-        className="form"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (!name.trim()) return
-          onSave({ ...income, name: name.trim(), payday, amount })
-        }}
-      >
-        <label className="field">
-          <span>Source</span>
-          <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Paycheck, Side hustle" autoFocus={!income} />
-        </label>
-        <label className="field">
-          <span>Payday</span>
-          <input type="date" value={payday} onChange={(e) => setPayday(e.target.value)} />
-        </label>
-        <label className="field">
-          <span>Received (after tax and deductions)</span>
-          <MoneyInput value={amount} onChange={setAmount} currency={currency} />
-        </label>
-        <button type="submit" className="btn primary" disabled={!name.trim()}>
-          Save
-        </button>
-        {income && (
-          <button type="button" className="btn danger" onClick={onDelete}>
-            Delete income
+      {(close) => (
+        <form
+          className="form"
+          onSubmit={(e) => {
+            e.preventDefault()
+            if (!name.trim()) return
+            onSave({ ...income, name: name.trim(), payday, amount })
+            close()
+          }}
+        >
+          <label className="field">
+            <span>Source</span>
+            <input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Paycheck, Side hustle" autoFocus={!income} />
+          </label>
+          <label className="field">
+            <span>Payday</span>
+            <input type="date" value={payday} onChange={(e) => setPayday(e.target.value)} />
+          </label>
+          <label className="field">
+            <span>Received (after tax and deductions)</span>
+            <MoneyInput value={amount} onChange={setAmount} currency={currency} />
+          </label>
+          <button type="submit" className="btn primary" disabled={!name.trim()}>
+            Save
           </button>
-        )}
-      </form>
+          {income && (
+            <button type="button" className="btn danger" onClick={() => onDelete() && close()}>
+              Delete income
+            </button>
+          )}
+        </form>
+      )}
     </Sheet>
   )
 }
@@ -99,15 +102,11 @@ export default function Income() {
           income={editing.id ? editing : null}
           currency={cur}
           onClose={() => setEditing(null)}
-          onSave={(row) => {
-            saveRow('incomes', row)
-            setEditing(null)
-          }}
+          onSave={(row) => saveRow('incomes', row)}
           onDelete={() => {
-            if (window.confirm(`Delete "${editing.name}"?`)) {
-              removeRow('incomes', editing.id)
-              setEditing(null)
-            }
+            if (!window.confirm(`Delete "${editing.name}"?`)) return false
+            removeRow('incomes', editing.id)
+            return true
           }}
         />
       )}
