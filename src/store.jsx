@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { computeMonth } from './lib/budget.js'
-import { createMonth, emptyData, normalizeData, uid } from './lib/model.js'
+import { createMonth, emptyData, monthKeyOf, normalizeData, uid } from './lib/model.js'
 import { loadData, saveData } from './lib/storage.js'
 
 const StoreContext = createContext(null)
@@ -59,12 +59,28 @@ export function StoreProvider({ children }) {
   const [ready, setReady] = useState(false)
   const loaded = useRef(false)
 
+  // Always open on the current calendar month, not the last one viewed
   useEffect(() => {
     loadData().then((saved) => {
-      if (saved) dispatch({ type: 'replace', data: saved })
+      if (saved) dispatch({ type: 'replace', data: { ...saved, currentMonth: monthKeyOf() } })
       loaded.current = true
       setReady(true)
     })
+  }, [])
+
+  // A Home Screen app can stay open for days: when it comes back to the
+  // foreground in a new month, move to that month
+  const realMonth = useRef(monthKeyOf())
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState !== 'visible') return
+      const now = monthKeyOf()
+      if (now === realMonth.current) return
+      realMonth.current = now
+      dispatch({ type: 'setCurrentMonth', key: now })
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
   }, [])
 
   useEffect(() => {
