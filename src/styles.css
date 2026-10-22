@@ -863,13 +863,24 @@ h2 {
 
 .split-inputs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0, …) lets columns shrink below the inputs' default width */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
   margin: 12px 0 4px;
 }
 
+.split-inputs .field {
+  min-width: 0;
+}
+
+.split-inputs .money-input {
+  padding: 0 10px 0 4px;
+}
+
 .split-inputs .money-input input {
+  width: 100%;
   text-align: right;
+  padding: 0 4px;
 }
 
 /* ---------- Sheet ---------- */
